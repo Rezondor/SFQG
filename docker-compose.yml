@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  backend:
+    image: ${DOCKER_REGISTRY-}bfqg
+    build:
+      context: .
+      dockerfile: BFQG/Dockerfile
+  client:
+    image: client
+    build: 
+        context: ./ffqg
+        dockerfile: Dockerfile
+  proxy:
+    image: nginx:mainline
