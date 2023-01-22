@@ -40,7 +40,7 @@ public partial class DbforqgsContext : DbContext
 
     public virtual DbSet<TeacherGroup> TeacherGroups { get; set; }
 
-    public virtual DbSet<UsersAuthenticationInformation> UsersAuthenticationInformations { get; set; }
+    public virtual DbSet<UsersAuthenticationInfo> UsersAuthenticationInfo { get; set; }
 
     public virtual DbSet<UsersInfo> UsersInfos { get; set; }
 
@@ -285,7 +285,7 @@ public partial class DbforqgsContext : DbContext
                 .HasConstraintName("fk_teacher_groups_users_info");
         });
 
-        modelBuilder.Entity<UsersAuthenticationInformation>(entity =>
+        modelBuilder.Entity<UsersAuthenticationInfo>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk_user_authentication_information");
 
@@ -297,15 +297,12 @@ public partial class DbforqgsContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(60)
                 .HasColumnName("email");
-            entity.Property(e => e.Login)
-                .HasMaxLength(60)
-                .HasColumnName("login");
             entity.Property(e => e.Password)
                 .HasColumnType("character varying")
                 .HasColumnName("password");
 
             entity.HasOne(d => d.IdNavigation).WithOne(p => p.UsersAuthenticationInformation)
-                .HasForeignKey<UsersAuthenticationInformation>(d => d.Id)
+                .HasForeignKey<UsersAuthenticationInfo>(d => d.Id)
                 .HasConstraintName("fk_user_authentication_information");
         });
 

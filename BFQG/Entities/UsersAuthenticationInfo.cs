@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace BFQG.Entities;
 
-public partial class UsersAuthenticationInformation
+public partial class UsersAuthenticationInfo
 {
     public int Id { get; set; }
-
-    public string Login { get; set; } = null!;
 
     public string Email { get; set; } = null!;
 
