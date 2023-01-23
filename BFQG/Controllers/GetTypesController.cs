@@ -12,11 +12,6 @@ namespace BFQG.Controllers
         {
             _context= context;
         }
-        [HttpGet("getAllAccountTypes")]
-        public IEnumerable<AccountType> GetTypes() 
-        {
-            
-            return _context.AccountTypes.ToList();
-        }
+        
     }
 }
