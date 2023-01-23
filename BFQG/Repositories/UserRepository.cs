@@ -5,7 +5,7 @@ using BFQG.Models;
 
 namespace BFQG.Repositories;
 
-public class UserRepository : IBaseRepository<User>
+public class UserRepository : IBaseRepository<UserModel>
 {
     private readonly DbforqgsContext _db;
 
@@ -14,12 +14,12 @@ public class UserRepository : IBaseRepository<User>
         _db = db;
     }
 
-    public IQueryable<User> GetAll()
+    public IQueryable<UserModel> GetAll()
     {
-        IQueryable<User> users = _db.UsersInfos
+        IQueryable<UserModel> users = _db.UsersInfos
             .Join(_db.UsersAuthenticationInfo,
             u => u.Id, u => u.Id,
-            (ui, ua) => new User
+            (ui, ua) => new UserModel
             {
                 Id = ui.Id,
                 FirstName = ui.Firstname,
@@ -35,7 +35,7 @@ public class UserRepository : IBaseRepository<User>
         return users;
     }
 
-    public async Task Delete(User entity)
+    public async Task Delete(UserModel entity)
     {
         _db.UsersInfos.Remove(
             _db.UsersInfos
@@ -43,11 +43,11 @@ public class UserRepository : IBaseRepository<User>
         await _db.SaveChangesAsync();
     }
 
-    public async Task Create(User entity)
+    public async Task Create(UserModel entity)
     {
-        await _db.UsersInfos.AddAsync(new UsersInfo() 
+        await _db.UsersInfos.AddAsync(new UsersInfo()
         {
-            Lastname=entity.LastName,
+            Lastname = entity.LastName,
             Firstname = entity.FirstName,
             Patronomic = entity.Patronomic,
             Course = entity.Course,
@@ -55,18 +55,22 @@ public class UserRepository : IBaseRepository<User>
             GroupId = entity.GroupId,
         });
         await _db.SaveChangesAsync();
-        int id = _db.UsersInfos.Last().Id;
         await _db.UsersAuthenticationInfo.AddAsync(new UsersAuthenticationInfo
         {
-            Id= id,
-            Email= entity.Email,
-            Password= entity.Password
+            Id = _db.UsersInfos.
+            Where(u => 
+            u.Firstname == entity.FirstName && 
+            u.Lastname == entity.LastName && 
+            u.Course == entity.Course && 
+            u.Patronomic == entity.Patronomic).First().Id,
+            Email = entity.Email,
+            Password = entity.Password
         });
         await _db.SaveChangesAsync();
 
     }
 
-    public async Task<User> Update(User entity)
+    public async Task<UserModel> Update(UserModel entity)
     {
         _db.UsersInfos.Update(new UsersInfo()
         {

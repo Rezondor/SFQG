@@ -289,7 +289,7 @@ public partial class DbforqgsContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_user_authentication_information");
 
-            entity.ToTable("users_authentication_information");
+            entity.ToTable("users_authentication_info");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -301,7 +301,7 @@ public partial class DbforqgsContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("password");
 
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.UsersAuthenticationInformation)
+            entity.HasOne(d => d.IdNavigation).WithOne(p => p.UsersAuthenticationInfo)
                 .HasForeignKey<UsersAuthenticationInfo>(d => d.Id)
                 .HasConstraintName("fk_user_authentication_information");
         });

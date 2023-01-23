@@ -6,6 +6,7 @@ namespace BFQG.Interfaces
 {
     public interface IAccountService
     {
-        Task<BaseResponse<ClaimsIdentity>> Login(LoginUser model);
+        Task<BaseResponse<ClaimsIdentity>> Login(LoginUserModel model);
+        Task<BaseResponse<ClaimsIdentity>> Register(RegisterUserModel model);
     }
 }

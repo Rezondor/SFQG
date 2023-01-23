@@ -19,8 +19,22 @@ namespace BFQG.Controllers
             _accountService= accountService;
         }
 
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterUserModel model)
+        {
+          
+            var response = await _accountService.Register(model);
+            if (response.StatusCode == Enum.StatusCode.OK)
+            {
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(response.Data));
+                return Ok();
+            }
+            return BadRequest(response.Data);
+        }
+
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUser user)
+        public async Task<IActionResult> Login(LoginUserModel user)
         {
             var response = await _accountService.Login(user);
 

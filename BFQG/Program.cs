@@ -19,12 +19,13 @@ builder.Services.AddCors(options => options.AddPolicy(PolicyName,
 builder.Services.AddDbContext<DbforqgsContext>(opt => 
         opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-{
-    options.LoginPath = new PathString("/Account/Login");
-    options.AccessDeniedPath = new PathString("/Account/Login");
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => { 
+    options.LoginPath = new PathString("/Account/login");
+    options.Cookie.Name = "Auth";
+    options.AccessDeniedPath = new PathString("/Account/login");
 });
-builder.Services.AddScoped<IBaseRepository<User>, UserRepository>();
+
+builder.Services.AddScoped<IBaseRepository<UserModel>, UserRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

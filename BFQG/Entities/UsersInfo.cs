@@ -35,5 +35,5 @@ public partial class UsersInfo
 
     public virtual ICollection<TeacherGroup> TeacherGroups { get; } = new List<TeacherGroup>();
 
-    public virtual UsersAuthenticationInfo? UsersAuthenticationInformation { get; set; }
+    public virtual UsersAuthenticationInfo? UsersAuthenticationInfo { get; set; }
 }
