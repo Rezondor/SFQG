@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BFQG.Entities;
+namespace BFQG;
 
 public partial class Lab
 {
@@ -22,6 +22,8 @@ public partial class Lab
     public bool IsVisible { get; set; }
 
     public string? TestLink { get; set; }
+
+    public int Number { get; set; }
 
     public virtual UsersInfo Author { get; set; } = null!;
 

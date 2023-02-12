@@ -1,8 +1,5 @@
-﻿using BFQG.Interfaces;
-using BFQG.Models;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -16,13 +13,13 @@ namespace BFQG.Controllers
 
         public AccountController(IAccountService accountService)
         {
-            _accountService= accountService;
+            _accountService = accountService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterUserModel model)
         {
-          
+
             var response = await _accountService.Register(model);
             if (response.StatusCode == Enum.StatusCode.OK)
             {
@@ -38,7 +35,7 @@ namespace BFQG.Controllers
         {
             var response = await _accountService.Login(user);
 
-            if (response.StatusCode == Enum.StatusCode.OK) 
+            if (response.StatusCode == Enum.StatusCode.OK)
             {
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(response.Data));
 

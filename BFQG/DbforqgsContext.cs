@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BFQG.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BFQG;
@@ -40,12 +39,13 @@ public partial class DbforqgsContext : DbContext
 
     public virtual DbSet<TeacherGroup> TeacherGroups { get; set; }
 
-    public virtual DbSet<UsersAuthenticationInfo> UsersAuthenticationInfo { get; set; }
+    public virtual DbSet<UsersAuthenticationInfo> UsersAuthenticationInfos { get; set; }
 
     public virtual DbSet<UsersInfo> UsersInfos { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=host.docker.internal;Port=5432;Database=dbforqgs;Username=postgres;Password=root");*/
+/*    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=dbforqgs;Username=postgres;Password=root");*/
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -141,6 +141,7 @@ public partial class DbforqgsContext : DbContext
                 .HasColumnName("doc_name");
             entity.Property(e => e.IsVisible).HasColumnName("is_visible");
             entity.Property(e => e.MaxScore).HasColumnName("max_score");
+            entity.Property(e => e.Number).HasColumnName("number");
             entity.Property(e => e.SubjectId).HasColumnName("subject_id");
             entity.Property(e => e.TestLink)
                 .HasColumnType("character varying")
@@ -272,12 +273,17 @@ public partial class DbforqgsContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.GroupId).HasColumnName("group_id");
+            entity.Property(e => e.SubjectId).HasColumnName("subject_id");
             entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
 
             entity.HasOne(d => d.Group).WithMany(p => p.TeacherGroups)
                 .HasForeignKey(d => d.GroupId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_teacher_groups_groups");
+
+            entity.HasOne(d => d.Subject).WithMany(p => p.TeacherGroups)
+                .HasForeignKey(d => d.SubjectId)
+                .HasConstraintName("fk_teacher_groups_subject");
 
             entity.HasOne(d => d.Teacher).WithMany(p => p.TeacherGroups)
                 .HasForeignKey(d => d.TeacherId)

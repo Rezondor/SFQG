@@ -1,4 +1,4 @@
-﻿using BFQG.Models;
+﻿using BFQG.Models.Auth;
 using BFQG.Response;
 using System.Security.Claims;
 

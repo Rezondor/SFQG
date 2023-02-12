@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BFQG.Entities;
+namespace BFQG;
 
 public partial class Subject
 {
@@ -12,4 +12,7 @@ public partial class Subject
     public virtual ICollection<Lab> Labs { get; } = new List<Lab>();
 
     public virtual ICollection<Lesson> Lessons { get; } = new List<Lesson>();
+
+    public virtual ICollection<TeacherGroup> TeacherGroups { get; } = new List<TeacherGroup>();
+
 }

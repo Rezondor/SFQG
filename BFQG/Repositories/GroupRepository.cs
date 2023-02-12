@@ -1,5 +1,4 @@
-﻿using BFQG.Entities;
-using BFQG.Enum;
+﻿using BFQG.Enum;
 using BFQG.Interfaces;
 using BFQG.Models;
 

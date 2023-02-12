@@ -26,6 +26,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 });
 
 builder.Services.AddScoped<IBaseRepository<UserModel>, UserRepository>();
+builder.Services.AddScoped<IBaseRepository<Group>, GroupRepository>();
+builder.Services.AddScoped<IBaseRepository<Subject>, SubjectRepository>();
+builder.Services.AddScoped<IBaseRepository<AccountType>, AccountTypeRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -1,17 +1,9 @@
-﻿using BFQG.Entities;
-using BFQG.Enum;
-using BFQG.Helpers;
-using BFQG.Interfaces;
-using BFQG.Models;
-using BFQG.Response;
-using Microsoft.EntityFrameworkCore;
-using NuGet.ContentModel;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BFQG.Services;
 
-public class AccountService: IAccountService
+public class AccountService : IAccountService
 {
     private readonly IBaseRepository<UserModel> _userRepository;
     public AccountService(IBaseRepository<UserModel> userRepository)
@@ -37,7 +29,7 @@ public class AccountService: IAccountService
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
-                Patronomic= model.Patronomic,
+                Patronomic = model.Patronomic,
                 Course = model.Course,
                 GroupId = model.GroupId,
                 Role = model.Role,

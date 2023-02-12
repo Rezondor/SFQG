@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BFQG.Entities;
+namespace BFQG;
 
 public partial class Group
 {

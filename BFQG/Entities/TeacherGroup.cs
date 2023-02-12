@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BFQG.Entities;
+namespace BFQG;
 
 public partial class TeacherGroup
 {
@@ -11,7 +11,11 @@ public partial class TeacherGroup
 
     public int GroupId { get; set; }
 
+    public int SubjectId { get; set; }
+
     public virtual Group Group { get; set; } = null!;
+
+    public virtual Subject Subject { get; set; } = null!;
 
     public virtual UsersInfo Teacher { get; set; } = null!;
 }

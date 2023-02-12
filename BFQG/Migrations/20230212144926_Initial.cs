@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BFQG.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -104,7 +104,8 @@ namespace BFQG.Migrations
                     deadline = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     maxscore = table.Column<int>(name: "max_score", type: "integer", nullable: true),
                     isvisible = table.Column<bool>(name: "is_visible", type: "boolean", nullable: false),
-                    testlink = table.Column<string>(name: "test_link", type: "character varying", nullable: true)
+                    testlink = table.Column<string>(name: "test_link", type: "character varying", nullable: true),
+                    number = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -184,7 +185,8 @@ namespace BFQG.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     teacherid = table.Column<int>(name: "teacher_id", type: "integer", nullable: false),
-                    groupid = table.Column<int>(name: "group_id", type: "integer", nullable: false)
+                    groupid = table.Column<int>(name: "group_id", type: "integer", nullable: false),
+                    subjectid = table.Column<int>(name: "subject_id", type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,6 +196,12 @@ namespace BFQG.Migrations
                         column: x => x.groupid,
                         principalTable: "groups",
                         principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_teacher_groups_subject",
+                        column: x => x.subjectid,
+                        principalTable: "subject",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_teacher_groups_users_info",
                         column: x => x.teacherid,
@@ -383,6 +391,11 @@ namespace BFQG.Migrations
                 name: "IX_teacher_groups_group_id",
                 table: "teacher_groups",
                 column: "group_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_teacher_groups_subject_id",
+                table: "teacher_groups",
+                column: "subject_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_teacher_groups_teacher_id",
