@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BFQG;
+namespace BFQG.Entities;
 
 public partial class UsersInfo
 {

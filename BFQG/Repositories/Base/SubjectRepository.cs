@@ -2,7 +2,7 @@
 using BFQG.Interfaces;
 using BFQG.Models;
 
-namespace BFQG.Repositories;
+namespace BFQG.Repositories.Base;
 
 public class SubjectRepository : IBaseRepository<Subject>
 {

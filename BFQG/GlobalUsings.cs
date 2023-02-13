@@ -6,3 +6,4 @@ global using BFQG.Interfaces;
 global using BFQG.Models;
 global using BFQG.Models.Auth;
 global using BFQG.Response;
+global using BFQG.Models.Room;

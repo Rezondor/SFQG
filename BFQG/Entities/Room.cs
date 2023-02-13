@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BFQG;
+namespace BFQG.Entities;
 
 public partial class Room
 {
@@ -13,7 +13,7 @@ public partial class Room
 
     public DateTime CreateDate { get; set; }
 
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
     public bool? IsClose { get; set; }
 

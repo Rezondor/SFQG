@@ -7,6 +7,7 @@ public class RoomModel
     public List<Student> Students { get; set; } = new List<Student>();
 
     public int SubjectId { get; set; }
+    public int GroupId { get; set; }
 
     public List<LabModel> Labs { get; set; } = new List<LabModel>();
 

@@ -1,7 +1,7 @@
 using BFQG;
 using BFQG.Interfaces;
 using BFQG.Models;
-using BFQG.Repositories;
+using BFQG.Repositories.Base;
 using BFQG.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +29,11 @@ builder.Services.AddScoped<IBaseRepository<UserModel>, UserRepository>();
 builder.Services.AddScoped<IBaseRepository<Group>, GroupRepository>();
 builder.Services.AddScoped<IBaseRepository<Subject>, SubjectRepository>();
 builder.Services.AddScoped<IBaseRepository<AccountType>, AccountTypeRepository>();
+
 builder.Services.AddScoped<IAccountService, AccountService>();
+
+builder.Services.AddSingleton<IRoomsService, RoomsService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
