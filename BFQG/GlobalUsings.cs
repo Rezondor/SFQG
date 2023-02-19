@@ -10,3 +10,5 @@ global using BFQG.Models.Room;
 global using BFQG.Repositories.Base;
 global using BFQG.Services;
 global using BFQG.Repositories.Advanced;
+global using BFQG.Singletons;
+global using Microsoft.AspNetCore.Mvc;

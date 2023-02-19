@@ -28,7 +28,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 Scopeds.Add(builder.Services);
 
-builder.Services.AddSingleton<IRoomsService, RoomsService>();
+builder.Services.AddSingleton<RoomSingleton>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -2,20 +2,22 @@
 {
     public class RoomsService : IRoomsService
     {
-        private List<RoomModel> _rooms;
         private IActionRoomRepository _actionRoomRepository;
-        public RoomsService(IActionRoomRepository actionRoomRepository)
+        private List<RoomModel> _rooms;
+        public RoomsService(IActionRoomRepository actionRoomRepository, RoomSingleton rooms)
         {
-            _rooms = new List<RoomModel>();
             _actionRoomRepository = actionRoomRepository;
+            _rooms = rooms.Rooms;
         }
 
+       
 
         // ++
         public async Task<BaseResponse<bool>> CloseRoomByGroupId(int groupId)
         {
             try
             {
+                
                 var removableRoom = _rooms.Where(r => r.GroupId == groupId).First();
                 _rooms.Remove(removableRoom);
 

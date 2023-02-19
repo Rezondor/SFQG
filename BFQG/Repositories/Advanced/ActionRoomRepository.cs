@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using BFQG.Models.Room;
+using System.Text.Json;
 
 namespace BFQG.Repositories.Advanced;
 
@@ -14,12 +15,14 @@ public class ActionRoomRepository : IActionRoomRepository
         IBaseRepository<Lesson> lessons, 
         IBaseRepository<Room> rooms, 
         IBaseRepository<HistoryRoom> historyRooms, 
-        IBaseRepository<Lab> labs)
+        IBaseRepository<Lab> labs,
+        IBaseRepository<UserModel> users)
     {
         _lessons = lessons;
         _rooms = rooms;
         _historyRooms = historyRooms;
         _labs = labs;
+        _users = users;
     }
     public async Task<bool> AddStatistic(RoomModel room)
     {
@@ -49,6 +52,7 @@ public class ActionRoomRepository : IActionRoomRepository
         {
             var room = _rooms.GetAll().Where(r => r.Id == id).First();
             room.IsClose = true;
+            room.EndDate = new DateTime(DateTime.Now.Ticks, DateTimeKind.Utc);
             await _rooms.Update(room);
             return true;
         }
@@ -62,7 +66,7 @@ public class ActionRoomRepository : IActionRoomRepository
     {
         try
         {
-            var date = DateTime.Now;
+            var date = new DateTime(DateTime.Now.Ticks,DateTimeKind.Utc);
             var tempLesson = new Lesson
             {
                 AuthorUserId = createRoomDataModel.TeacherId,
@@ -72,7 +76,6 @@ public class ActionRoomRepository : IActionRoomRepository
             };
 
             await _lessons.Create(tempLesson);
-
             var lesson = _lessons.GetAll()
                 .Where(l => l.GroupId == tempLesson.GroupId &&
                 l.SubjectId == tempLesson.SubjectId &&
@@ -86,7 +89,7 @@ public class ActionRoomRepository : IActionRoomRepository
                 UserCount = _users.GetAll().Where(u => u.GroupId == createRoomDataModel.GroupId).Count()
             });
 
-            var tempRoom = _rooms.GetAll().Where(r => r.LessonId == tempLesson.SubjectId && r.CreateDate == date).First();
+            var tempRoom = _rooms.GetAll().Where(r => r.LessonId == tempLesson.Id && r.CreateDate == date).First();
             var roomModel = new RoomModel
             {
                 Id = tempRoom.Id,
@@ -113,7 +116,7 @@ public class ActionRoomRepository : IActionRoomRepository
             };
             return roomModel;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             throw new Exception("Ошибка!");
         }
@@ -143,5 +146,40 @@ public class ActionRoomRepository : IActionRoomRepository
             }
         }
         return JsonSerializer.Serialize(labs);
+    }
+
+    public IQueryable<RoomModel> GetAll()
+    {
+        var rooms = _rooms.GetAll().Where(r => r.IsClose == false);
+        return rooms.Join(
+            _lessons.GetAll(),
+            r => r.LessonId,
+            l => l.Id,
+            (r, les) => new RoomModel
+            {
+                Id = r.Id,
+                SubjectId = les.SubjectId,
+                GroupId = les.GroupId,
+                Labs = _labs.GetAll()
+                .Where(l => l.IsVisible == true && l.SubjectId == les.SubjectId)
+                .Select(l => new LabModel
+                {
+                    Id = l.Id,
+                    IsVisible = l.IsVisible,
+                    Deadline = l.Deadline,
+                    DocName = l.DocName,
+                    MaxScore = l.MaxScore,
+                    Number = l.Number,
+                    TestLink = l.TestLink,
+                    Title = l.Title,
+                }).ToList(),
+                Teacher = _users.GetAll().Where(u => u.Id == les.AuthorUserId).Select(t => new Teacher
+                {
+                    TeacherId = t.Id,
+                    Firstname = t.FirstName,
+                    Lastname = t.LastName,
+                    Patronomic = t.Patronomic,
+                }).First(),
+            });            
     }
 }

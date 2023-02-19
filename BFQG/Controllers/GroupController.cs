@@ -3,7 +3,7 @@
 namespace BFQG.Controllers;
 
 [ApiController]
-[Route("api/groups")]
+[Route("api/[controller]")]
 public class GroupController : Controller
 {
     [NonAction]

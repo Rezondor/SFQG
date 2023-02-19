@@ -6,8 +6,8 @@ using System.Security.Claims;
 namespace BFQG.Controllers;
 
 [ApiController]
-[Route("api/account")]
-public class AccountController : Controller
+[Route("api/[controller]")]
+public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
 

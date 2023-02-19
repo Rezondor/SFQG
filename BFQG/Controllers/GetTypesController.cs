@@ -3,7 +3,7 @@
 namespace BFQG.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class GetTypesController : Controller
 {
     public GetTypesController(DbforqgsContext context)
