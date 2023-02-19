@@ -2,6 +2,7 @@
 
 public class PrepareLabsData
 {
+
     public static List<LabsStudent> Prepare(in List<LabsStudent> prepareStudent, int countEnableLabs)
     {
         var students = prepareStudent.ToList();
