@@ -7,3 +7,6 @@ global using BFQG.Models;
 global using BFQG.Models.Auth;
 global using BFQG.Response;
 global using BFQG.Models.Room;
+global using BFQG.Repositories.Base;
+global using BFQG.Services;
+global using BFQG.Repositories.Advanced;

@@ -1,5 +1,4 @@
-﻿
-namespace BFQG.Interfaces;
+﻿namespace BFQG.Interfaces;
 
 public interface IRoomsService
 { 

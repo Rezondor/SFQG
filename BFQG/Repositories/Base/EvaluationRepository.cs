@@ -1,11 +1,11 @@
 ﻿namespace BFQG.Repositories.Base;
 
-public class EvalutionRepository : IBaseRepository<Evaluation>
+public class EvaluationRepository : IBaseRepository<Evaluation>
 {
 
     private readonly DbforqgsContext _db;
 
-    public EvalutionRepository(DbforqgsContext db)
+    public EvaluationRepository(DbforqgsContext db)
     {
         _db = db;
     }

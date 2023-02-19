@@ -18,4 +18,19 @@ public class LabModel
 
     public string? TestLink { get; set; }
 
+    public static implicit operator Lab(LabModel l)
+    {
+        return new LabModel
+        {
+            Id = l.Id,
+            IsVisible = l.IsVisible,
+            Deadline = l.Deadline,
+            DocName = l.DocName,
+            MaxScore = l.MaxScore,
+            Number = l.Number,
+            TestLink = l.TestLink,
+            Title = l.Title,
+        };
+    }
+
 }

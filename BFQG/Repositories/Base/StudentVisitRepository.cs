@@ -1,11 +1,11 @@
 ﻿namespace BFQG.Repositories.Base;
 
-public class StydentVisitRepository : IBaseRepository<StudentVisit>
+public class StudentVisitRepository : IBaseRepository<StudentVisit>
 {
 
     private readonly DbforqgsContext _db;
 
-    public StydentVisitRepository(DbforqgsContext db)
+    public StudentVisitRepository(DbforqgsContext db)
     {
         _db = db;
     }

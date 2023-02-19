@@ -6,13 +6,18 @@ services:
     build:
       context: .
       dockerfile: BFQG/Dockerfile
+      
   client:
+    container_name: client
     image: client
     build: 
         context: ./ffqg
         dockerfile: Dockerfile
+
   proxy:
+    container_name: proxy
     image: nginx:mainline
+
   project_db:
     container_name: project_db
     image: postgres:15

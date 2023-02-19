@@ -31,17 +31,17 @@ public class PrepareLabsData
                 int numberInRow = 0;
                 for (int numb = 0, i = student.Labs[numb]; i < student.Labs.Count - student.Labs[0] - 1; numb++, i = student.Labs[numb])
                 {
-                    if (i != numb)
-                    {
-                        inRow = false;
-                        numberInRow = numb - 1;
-                    }
+                    if (i == numb)
+                        continue;
+
+                    inRow = false;
+                    numberInRow = numb - 1;
                 }
 
                 int countLabHandOver = student.Labs.Count;
 
                 if (!inRow)
-                    countLabHandOver = numberInRow; 
+                    countLabHandOver = numberInRow;
 
                 List<int> preparedLabs =
                     Enumerable.Range(0, labs.Count).Select(e => 1)

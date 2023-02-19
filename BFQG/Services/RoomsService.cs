@@ -3,20 +3,29 @@
     public class RoomsService : IRoomsService
     {
         private List<RoomModel> _rooms;
-        public RoomsService()
+        private IActionRoomRepository _actionRoomRepository;
+        public RoomsService(IActionRoomRepository actionRoomRepository)
         {
-            _rooms= new List<RoomModel>();
+            _rooms = new List<RoomModel>();
+            _actionRoomRepository = actionRoomRepository;
         }
+
+
+        // ++
         public async Task<BaseResponse<bool>> CloseRoomByGroupId(int groupId)
         {
-            await Task.Delay(0);
             try
             {
                 var removableRoom = _rooms.Where(r => r.GroupId == groupId).First();
                 _rooms.Remove(removableRoom);
+
                 //Установить в БД возле этой комнаты флаг закрыта.
+                await _actionRoomRepository.Close(removableRoom.Id);
+
                 //Подсчитать статистику
                 //Добавить всю статискику в таблицу истории
+                await _actionRoomRepository.AddStatistic(removableRoom);
+               
                 return new BaseResponse<bool>
                 {
                     Data = true,
@@ -36,17 +45,19 @@
             
         }
 
+
+        // ++
         public async Task<BaseResponse<RoomModel>> CreateRoom(CreateRoomDataModel entity)
         {
             //Создание комнаты в БД
-            //Создание урока
+            //Создание урока 
             //Добавление в лист
             //Возврат комнаты если всё хорошо
 
             try
             {
-                var room = new RoomModel();
-
+                var room = await _actionRoomRepository.Create(entity);
+                _rooms.Add(room);
                 return new BaseResponse<RoomModel>
                 {
                     Data = room,
@@ -66,6 +77,8 @@
             }
         }
 
+
+        // ++
         public async Task<BaseResponse<RoomModel>> GetRoomByGroupId(int groupId)
         {
             //Поиск комнаты по id группы 

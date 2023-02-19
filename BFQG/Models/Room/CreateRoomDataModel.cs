@@ -4,5 +4,5 @@ public class CreateRoomDataModel
 {
     public int TeacherId { get; set; }
     public int GroupId { get; set; }
-    public int LessonId { get; set; }
+    public int SubjectId { get; set; }
 }

@@ -25,12 +25,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.AccessDeniedPath = new PathString("/Account/login");
 });
 
-builder.Services.AddScoped<IBaseRepository<UserModel>, UserRepository>();
-builder.Services.AddScoped<IBaseRepository<Group>, GroupRepository>();
-builder.Services.AddScoped<IBaseRepository<Subject>, SubjectRepository>();
-builder.Services.AddScoped<IBaseRepository<AccountType>, AccountTypeRepository>();
 
-builder.Services.AddScoped<IAccountService, AccountService>();
+Scopeds.Add(builder.Services);
 
 builder.Services.AddSingleton<IRoomsService, RoomsService>();
 

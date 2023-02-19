@@ -1,5 +1,5 @@
-﻿namespace BFQG.Controllers;
-
+﻿ namespace BFQG.Controllers;
+//Пока не работает
 public class RoomController
 {
     private RoomModel _room;
@@ -96,7 +96,7 @@ public class RoomController
 
     public TimeOnly GetAvgTime()
     {
-        return new TimeOnly(_room.SumTime.Ticks / (_room.CompleteLabs.Count == 0 ? 1 : _room.CompleteLabs.Count));
+        return _room.AvgTime;
     }
 
     private bool CheckStudentInQueue(LabsStudent student)

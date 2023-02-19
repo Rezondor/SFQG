@@ -117,6 +117,7 @@ public partial class DbforqgsContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AvgProvenTime).HasColumnName("avg_proven_time");
+            entity.Property(e => e.LabsJson).HasColumnName("labs_json");
             entity.Property(e => e.ProvenLabCount).HasColumnName("proven_lab_count");
             entity.Property(e => e.RoomId).HasColumnName("room_id");
             entity.Property(e => e.StudentsCount).HasColumnName("students_count");

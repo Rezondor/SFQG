@@ -1,7 +1,10 @@
-﻿namespace BFQG.Models;
+﻿using BFQG.Entities;
+
+namespace BFQG.Models;
 
 public class RoomModel
 {
+    public int Id { get; set; }
     public Teacher Teacher { get; set; }
 
     public List<Student> Students { get; set; } = new List<Student>();
@@ -22,5 +25,7 @@ public class RoomModel
     public bool LessoStart { get; set; } = false;
 
     public TimeOnly StartTime { get; set; }
+
+    public TimeOnly AvgTime => new TimeOnly(SumTime.Ticks / (CompleteLabs.Count == 0 ? 1 : CompleteLabs.Count));
 
 }

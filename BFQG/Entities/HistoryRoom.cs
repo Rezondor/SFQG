@@ -11,9 +11,11 @@ public partial class HistoryRoom
 
     public int ProvenLabCount { get; set; }
 
-    public float AvgProvenTime { get; set; }
+    public TimeOnly AvgProvenTime { get; set; }
 
     public int StudentsCount { get; set; }
+
+    public string? LabsJson { get; set; }
 
     public virtual Room Room { get; set; } = null!;
 }
