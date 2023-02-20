@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BFQG.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -68,7 +68,8 @@ namespace BFQG.Migrations
                 name: "users_info",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false, defaultValueSql: "nextval('users_id_seq'::regclass)"),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     lastname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     firstname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     patronomic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
@@ -264,7 +265,7 @@ namespace BFQG.Migrations
                     lessonid = table.Column<int>(name: "lesson_id", type: "integer", nullable: false),
                     usercount = table.Column<int>(name: "user_count", type: "integer", nullable: true),
                     createdate = table.Column<DateTime>(name: "create_date", type: "timestamp with time zone", nullable: false),
-                    enddate = table.Column<DateTime>(name: "end_date", type: "timestamp with time zone", nullable: false),
+                    enddate = table.Column<DateTime>(name: "end_date", type: "timestamp with time zone", nullable: true),
                     isclose = table.Column<bool>(name: "is_close", type: "boolean", nullable: true)
                 },
                 constraints: table =>
@@ -309,8 +310,9 @@ namespace BFQG.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     roomid = table.Column<int>(name: "room_id", type: "integer", nullable: false),
                     provenlabcount = table.Column<int>(name: "proven_lab_count", type: "integer", nullable: false),
-                    avgproventime = table.Column<float>(name: "avg_proven_time", type: "real", nullable: false),
-                    studentscount = table.Column<int>(name: "students_count", type: "integer", nullable: false)
+                    avgproventime = table.Column<TimeOnly>(name: "avg_proven_time", type: "time without time zone", nullable: false),
+                    studentscount = table.Column<int>(name: "students_count", type: "integer", nullable: false),
+                    labsjson = table.Column<string>(name: "labs_json", type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

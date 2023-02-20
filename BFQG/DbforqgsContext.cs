@@ -320,7 +320,6 @@ public partial class DbforqgsContext : DbContext
             entity.ToTable("users_info");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('users_id_seq'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.AccountTypeId).HasColumnName("account_type_id");
             entity.Property(e => e.Course).HasColumnName("course");

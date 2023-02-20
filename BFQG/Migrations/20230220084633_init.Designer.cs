@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BFQG.Migrations
 {
     [DbContext(typeof(DbforqgsContext))]
-    [Migration("20230212144926_Initial")]
-    partial class Initial
+    [Migration("20230220084633_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace BFQG.Migrations
                     b.ToTable("action_type", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Evaluation", b =>
+            modelBuilder.Entity("BFQG.Entities.Evaluation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace BFQG.Migrations
                     b.ToTable("evaluations", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Group", b =>
+            modelBuilder.Entity("BFQG.Entities.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +125,7 @@ namespace BFQG.Migrations
                     b.ToTable("groups", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.HistoryRoom", b =>
+            modelBuilder.Entity("BFQG.Entities.HistoryRoom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,9 +134,13 @@ namespace BFQG.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("AvgProvenTime")
-                        .HasColumnType("real")
+                    b.Property<TimeOnly>("AvgProvenTime")
+                        .HasColumnType("time without time zone")
                         .HasColumnName("avg_proven_time");
+
+                    b.Property<string>("LabsJson")
+                        .HasColumnType("text")
+                        .HasColumnName("labs_json");
 
                     b.Property<int>("ProvenLabCount")
                         .HasColumnType("integer")
@@ -158,7 +162,7 @@ namespace BFQG.Migrations
                     b.ToTable("history_rooms", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Lab", b =>
+            modelBuilder.Entity("BFQG.Entities.Lab", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,7 +218,7 @@ namespace BFQG.Migrations
                     b.ToTable("labs", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Lesson", b =>
+            modelBuilder.Entity("BFQG.Entities.Lesson", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -251,7 +255,7 @@ namespace BFQG.Migrations
                     b.ToTable("lessons", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Log", b =>
+            modelBuilder.Entity("BFQG.Entities.Log", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,7 +287,7 @@ namespace BFQG.Migrations
                     b.ToTable("logs", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Room", b =>
+            modelBuilder.Entity("BFQG.Entities.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,7 +300,7 @@ namespace BFQG.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("create_date");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_date");
 
@@ -320,7 +324,7 @@ namespace BFQG.Migrations
                     b.ToTable("rooms", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.StudentVisit", b =>
+            modelBuilder.Entity("BFQG.Entities.StudentVisit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -347,7 +351,7 @@ namespace BFQG.Migrations
                     b.ToTable("student_visits", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Subject", b =>
+            modelBuilder.Entity("BFQG.Entities.Subject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -367,7 +371,7 @@ namespace BFQG.Migrations
                     b.ToTable("subject", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.TeacherGroup", b =>
+            modelBuilder.Entity("BFQG.Entities.TeacherGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -400,7 +404,7 @@ namespace BFQG.Migrations
                     b.ToTable("teacher_groups", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.UsersAuthenticationInfo", b =>
+            modelBuilder.Entity("BFQG.Entities.UsersAuthenticationInfo", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("integer")
@@ -423,13 +427,14 @@ namespace BFQG.Migrations
                     b.ToTable("users_authentication_info", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.UsersInfo", b =>
+            modelBuilder.Entity("BFQG.Entities.UsersInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("nextval('users_id_seq'::regclass)");
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountTypeId")
                         .HasColumnType("integer")
@@ -470,15 +475,15 @@ namespace BFQG.Migrations
                     b.ToTable("users_info", (string)null);
                 });
 
-            modelBuilder.Entity("BFQG.Evaluation", b =>
+            modelBuilder.Entity("BFQG.Entities.Evaluation", b =>
                 {
-                    b.HasOne("BFQG.Lab", "Lab")
+                    b.HasOne("BFQG.Entities.Lab", "Lab")
                         .WithMany("Evaluations")
                         .HasForeignKey("LabId")
                         .IsRequired()
                         .HasConstraintName("fk_evaluations_labs");
 
-                    b.HasOne("BFQG.UsersInfo", "User")
+                    b.HasOne("BFQG.Entities.UsersInfo", "User")
                         .WithMany("Evaluations")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -489,9 +494,9 @@ namespace BFQG.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BFQG.HistoryRoom", b =>
+            modelBuilder.Entity("BFQG.Entities.HistoryRoom", b =>
                 {
-                    b.HasOne("BFQG.Room", "Room")
+                    b.HasOne("BFQG.Entities.Room", "Room")
                         .WithMany("HistoryRooms")
                         .HasForeignKey("RoomId")
                         .IsRequired()
@@ -500,15 +505,15 @@ namespace BFQG.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("BFQG.Lab", b =>
+            modelBuilder.Entity("BFQG.Entities.Lab", b =>
                 {
-                    b.HasOne("BFQG.UsersInfo", "Author")
+                    b.HasOne("BFQG.Entities.UsersInfo", "Author")
                         .WithMany("Labs")
                         .HasForeignKey("AuthorId")
                         .IsRequired()
                         .HasConstraintName("fk_labs_users");
 
-                    b.HasOne("BFQG.Subject", "Subject")
+                    b.HasOne("BFQG.Entities.Subject", "Subject")
                         .WithMany("Labs")
                         .HasForeignKey("SubjectId")
                         .IsRequired()
@@ -519,21 +524,21 @@ namespace BFQG.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("BFQG.Lesson", b =>
+            modelBuilder.Entity("BFQG.Entities.Lesson", b =>
                 {
-                    b.HasOne("BFQG.UsersInfo", "AuthorUser")
+                    b.HasOne("BFQG.Entities.UsersInfo", "AuthorUser")
                         .WithMany("Lessons")
                         .HasForeignKey("AuthorUserId")
                         .IsRequired()
                         .HasConstraintName("fk_lessons_users");
 
-                    b.HasOne("BFQG.Group", "Group")
+                    b.HasOne("BFQG.Entities.Group", "Group")
                         .WithMany("Lessons")
                         .HasForeignKey("GroupId")
                         .IsRequired()
                         .HasConstraintName("fk_lessons_groups");
 
-                    b.HasOne("BFQG.Subject", "Subject")
+                    b.HasOne("BFQG.Entities.Subject", "Subject")
                         .WithMany("Lessons")
                         .HasForeignKey("SubjectId")
                         .IsRequired()
@@ -546,7 +551,7 @@ namespace BFQG.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("BFQG.Log", b =>
+            modelBuilder.Entity("BFQG.Entities.Log", b =>
                 {
                     b.HasOne("BFQG.Entities.ActionType", "ActionType")
                         .WithMany("Logs")
@@ -554,7 +559,7 @@ namespace BFQG.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_logs_action_type");
 
-                    b.HasOne("BFQG.UsersInfo", "User")
+                    b.HasOne("BFQG.Entities.UsersInfo", "User")
                         .WithMany("Logs")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -565,9 +570,9 @@ namespace BFQG.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BFQG.Room", b =>
+            modelBuilder.Entity("BFQG.Entities.Room", b =>
                 {
-                    b.HasOne("BFQG.Lesson", "Lesson")
+                    b.HasOne("BFQG.Entities.Lesson", "Lesson")
                         .WithMany("Rooms")
                         .HasForeignKey("LessonId")
                         .IsRequired()
@@ -576,15 +581,15 @@ namespace BFQG.Migrations
                     b.Navigation("Lesson");
                 });
 
-            modelBuilder.Entity("BFQG.StudentVisit", b =>
+            modelBuilder.Entity("BFQG.Entities.StudentVisit", b =>
                 {
-                    b.HasOne("BFQG.Lesson", "Lesson")
+                    b.HasOne("BFQG.Entities.Lesson", "Lesson")
                         .WithMany("StudentVisits")
                         .HasForeignKey("LessonId")
                         .IsRequired()
                         .HasConstraintName("fk_student_visits_lessons");
 
-                    b.HasOne("BFQG.UsersInfo", "User")
+                    b.HasOne("BFQG.Entities.UsersInfo", "User")
                         .WithMany("StudentVisits")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -595,22 +600,22 @@ namespace BFQG.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BFQG.TeacherGroup", b =>
+            modelBuilder.Entity("BFQG.Entities.TeacherGroup", b =>
                 {
-                    b.HasOne("BFQG.Group", "Group")
+                    b.HasOne("BFQG.Entities.Group", "Group")
                         .WithMany("TeacherGroups")
                         .HasForeignKey("GroupId")
                         .IsRequired()
                         .HasConstraintName("fk_teacher_groups_groups");
 
-                    b.HasOne("BFQG.Subject", "Subject")
+                    b.HasOne("BFQG.Entities.Subject", "Subject")
                         .WithMany("TeacherGroups")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_teacher_groups_subject");
 
-                    b.HasOne("BFQG.UsersInfo", "Teacher")
+                    b.HasOne("BFQG.Entities.UsersInfo", "Teacher")
                         .WithMany("TeacherGroups")
                         .HasForeignKey("TeacherId")
                         .IsRequired()
@@ -623,11 +628,11 @@ namespace BFQG.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("BFQG.UsersAuthenticationInfo", b =>
+            modelBuilder.Entity("BFQG.Entities.UsersAuthenticationInfo", b =>
                 {
-                    b.HasOne("BFQG.UsersInfo", "IdNavigation")
+                    b.HasOne("BFQG.Entities.UsersInfo", "IdNavigation")
                         .WithOne("UsersAuthenticationInfo")
-                        .HasForeignKey("BFQG.UsersAuthenticationInfo", "Id")
+                        .HasForeignKey("BFQG.Entities.UsersAuthenticationInfo", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_authentication_information");
@@ -635,7 +640,7 @@ namespace BFQG.Migrations
                     b.Navigation("IdNavigation");
                 });
 
-            modelBuilder.Entity("BFQG.UsersInfo", b =>
+            modelBuilder.Entity("BFQG.Entities.UsersInfo", b =>
                 {
                     b.HasOne("BFQG.Entities.AccountType", "AccountType")
                         .WithMany("UsersInfos")
@@ -643,7 +648,7 @@ namespace BFQG.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_users_account_type");
 
-                    b.HasOne("BFQG.Group", "Group")
+                    b.HasOne("BFQG.Entities.Group", "Group")
                         .WithMany("UsersInfos")
                         .HasForeignKey("GroupId")
                         .HasConstraintName("fk_users_groups");
@@ -663,7 +668,7 @@ namespace BFQG.Migrations
                     b.Navigation("Logs");
                 });
 
-            modelBuilder.Entity("BFQG.Group", b =>
+            modelBuilder.Entity("BFQG.Entities.Group", b =>
                 {
                     b.Navigation("Lessons");
 
@@ -672,24 +677,24 @@ namespace BFQG.Migrations
                     b.Navigation("UsersInfos");
                 });
 
-            modelBuilder.Entity("BFQG.Lab", b =>
+            modelBuilder.Entity("BFQG.Entities.Lab", b =>
                 {
                     b.Navigation("Evaluations");
                 });
 
-            modelBuilder.Entity("BFQG.Lesson", b =>
+            modelBuilder.Entity("BFQG.Entities.Lesson", b =>
                 {
                     b.Navigation("Rooms");
 
                     b.Navigation("StudentVisits");
                 });
 
-            modelBuilder.Entity("BFQG.Room", b =>
+            modelBuilder.Entity("BFQG.Entities.Room", b =>
                 {
                     b.Navigation("HistoryRooms");
                 });
 
-            modelBuilder.Entity("BFQG.Subject", b =>
+            modelBuilder.Entity("BFQG.Entities.Subject", b =>
                 {
                     b.Navigation("Labs");
 
@@ -698,7 +703,7 @@ namespace BFQG.Migrations
                     b.Navigation("TeacherGroups");
                 });
 
-            modelBuilder.Entity("BFQG.UsersInfo", b =>
+            modelBuilder.Entity("BFQG.Entities.UsersInfo", b =>
                 {
                     b.Navigation("Evaluations");
 
