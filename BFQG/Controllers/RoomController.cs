@@ -6,13 +6,16 @@ public class RoomController : ControllerBase
 {
     private List<RoomModel> _rooms;
     private IBaseRepository<UserModel> _users;
+    private DbforqgsContext _context;
+    private IMarkService _markService;
 
 
-    public RoomController(RoomSingleton rooms, IBaseRepository<UserModel> users)
+    public RoomController(RoomSingleton rooms, IBaseRepository<UserModel> users,IMarkService markService, DbforqgsContext context)
     {
         _rooms = rooms.Rooms.ToList();
         _users = users;
-
+        _context = context;
+        _markService = markService;
     }
 
     [HttpPost("AddStudent")]
@@ -38,8 +41,8 @@ public class RoomController : ControllerBase
             }
             else
             {
-                var studentLab = PrepareLabsData.Prepare(new() { student }, _room.Labs.Count);
-                _room.QueueLabs = _room.QueueLabs.Concat(QueueGenerator.GenerateQueueLabDown(studentLab, _room.Labs)).ToList();
+                var studentLab = PrepareLabsData.Prepare(new() { student }, _room.Labs.Count, _context);
+                _room.QueueLabs = _room.QueueLabs.Concat(QueueGenerator.GenerateQueueLabDown(studentLab, _room.Labs.OrderBy(l => l.Number).ToList())).ToList();
             }
             return Ok();
         }
@@ -56,7 +59,6 @@ public class RoomController : ControllerBase
         try
         {
             var _room = _rooms.Where(r => r.Id == roomId).First();
-            _room = _rooms.Where(r => r.Id == roomId).First();
 
             if (!CheckAuth() || CheckStudent() || !CheckInRoom(roomId))
                 throw new Exception();
@@ -64,8 +66,8 @@ public class RoomController : ControllerBase
 
             if (_room.LessoStart == false)
             {
-                var prepData = PrepareLabsData.Prepare(_room.PrepareStudent, _room.Labs.Count);
-                _room.QueueLabs = QueueGenerator.GenerateQueueLabDown(prepData, _room.Labs);
+                var prepData = PrepareLabsData.Prepare(_room.PrepareStudent, _room.Labs.Count, _context);
+                _room.QueueLabs = QueueGenerator.GenerateQueueLabDown(prepData, _room.Labs.OrderBy(l=>l.Number).ToList());
                 _room.PrepareStudent = new List<LabsStudent>();
                 _room.StartTime = new TimeOnly(DateTime.Now.TimeOfDay.Ticks);
             }
@@ -79,58 +81,88 @@ public class RoomController : ControllerBase
         
     }
 
-    [NonAction]
-    public void SetMark(int roomId, int mark)
+    [HttpPost("SetMark")]
+    public async Task<IActionResult> SetMark(int roomId, int mark)
     {
-        var _room = _rooms.Where(r => r.Id == roomId).First();
-        if (!CheckAuth() || CheckStudent() || !CheckInRoom(roomId))
-            throw new Exception();
-
-        LabStudent student = _room.QueueLabs[0];
-        _room.QueueLabs.Remove(student);
-        //SetMarkInDB(student, mark);
-        _room.SumTime = new TimeOnly(DateTime.Now.TimeOfDay.Ticks - _room.StartTime.Ticks);
-        _room.CompleteLabs.Add(new CompleteLaboratoryModel()
+        try
         {
-            CompliteDate = new DateTime(DateTime.Now.Ticks, DateTimeKind.Utc),
-            LabNumber = student.Lab.Number,
-            Mark = mark,
-            StudentId = student.StudentId,
-        });
+            var _room = _rooms.Where(r => r.Id == roomId).First();
+            if (!CheckAuth() || CheckStudent() || !CheckInRoom(roomId))
+                throw new Exception();
+
+            LabStudent student = _room.QueueLabs[0];
+             bool answer = await _markService.SetMark(new CompletedLabModel
+            {
+                LabId = student.Lab.Id,
+                StudentId= student.StudentId,
+                Mark = mark,
+                HandOverTime = new DateTime(DateTime.Now.Ticks, DateTimeKind.Utc),
+            });
+            if (!answer)
+                throw new Exception();
+            
+            _room.QueueLabs.Remove(student);
+            _room.SumTime = new TimeOnly(DateTime.Now.TimeOfDay.Ticks - _room.StartTime.Ticks);
+            _room.CompleteLabs.Add(new CompleteLaboratoryModel()
+            {
+                CompliteDate = new DateTime(DateTime.Now.Ticks, DateTimeKind.Utc),
+                LabNumber = student.Lab.Number,
+                Mark = mark,
+                StudentId = student.StudentId,
+            });
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+        
     }
     [HttpGet("GetQueue")]
     public List<LabStudent> GetQueue(int roomId)
     {
-        var _room = _rooms.Where(r => r.Id == roomId).First();
-        if (!CheckAuth() || !CheckInRoom(roomId))
-            throw new Exception();
-        return _room.QueueLabs;
+        try
+        {
+            var _room = _rooms.Where(r => r.Id == roomId).First();
+            if (!CheckAuth() || !CheckInRoom(roomId))
+                throw new Exception();
+            return _room.QueueLabs;
+        }
+        catch (Exception)
+        {
+
+            return null;
+        }
     }
-    [NonAction]
     /*public List<LabsStudent> GetLabsStudents()
     {
         return _room.PrepareStudent;
     }*/
 
     [HttpPost("ReturnToQueue")]
-    public void ReturnToQueue(int roomId)
+    public async Task<IActionResult> ReturnToQueue(int roomId)
     {
-
-        if (!CheckAuth() || CheckStudent() || !CheckInRoom(roomId))
-            throw new Exception();
-
-        var _room = _rooms.Where(r => r.Id == roomId).First();
-
-        var students = _room.QueueLabs.Where(s => s.StudentId == _room.QueueLabs[0].StudentId);
-        foreach (var labStudent in students)
+        try
         {
-            _room.QueueLabs.Remove(labStudent);
-            _room.QueueLabs.Add(labStudent);
+            if (!CheckAuth() || CheckStudent() || !CheckInRoom(roomId))
+                throw new Exception();
+
+            var _room = _rooms.Where(r => r.Id == roomId).First();
+
+            var students = _room.QueueLabs.Where(s => s.StudentId == _room.QueueLabs[0].StudentId).ToList();
+            foreach (var labStudent in students)
+            {
+                _room.QueueLabs.Remove(labStudent);
+                _room.QueueLabs.Add(labStudent);
+            }
+            return Ok();
         }
-    }
-    [NonAction]
-    private void SetMarkInDB(LabStudent labStudent, int mark)
-    {
+        catch (Exception)
+        {
+
+            return BadRequest();
+        }
+        
     }
 
     [HttpGet("GetAvgTime")]
@@ -138,7 +170,6 @@ public class RoomController : ControllerBase
     {
         try
         {
-
             if (!CheckAuth() || !CheckInRoom(roomId))
                 throw new Exception();
             var _room = _rooms.Where(r => r.Id == roomId).First();

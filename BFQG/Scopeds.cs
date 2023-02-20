@@ -21,5 +21,6 @@ public class Scopeds
         Services.AddScoped<IAccountService, AccountService>();
         Services.AddScoped<IActionRoomRepository, ActionRoomRepository>();
         Services.AddScoped<IRoomsService, RoomsService>();
+        Services.AddScoped<IMarkService, MarkService>();
     }
 }
