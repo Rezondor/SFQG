@@ -1,0 +1,14 @@
+﻿global using BFQG.Entities;
+global using BFQG.Controllers;
+global using BFQG.Enum;
+global using BFQG.Helpers;
+global using BFQG.Interfaces;
+global using BFQG.Models;
+global using BFQG.Models.Auth;
+global using BFQG.Response;
+global using BFQG.Models.Room;
+global using BFQG.Repositories.Base;
+global using BFQG.Services;
+global using BFQG.Repositories.Advanced;
+global using BFQG.Singletons;
+global using Microsoft.AspNetCore.Mvc;

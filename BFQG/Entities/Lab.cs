@@ -23,6 +23,8 @@ public partial class Lab
 
     public string? TestLink { get; set; }
 
+    public int Number { get; set; }
+
     public virtual UsersInfo Author { get; set; } = null!;
 
     public virtual ICollection<Evaluation> Evaluations { get; } = new List<Evaluation>();

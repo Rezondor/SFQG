@@ -1,57 +1,53 @@
-﻿using BFQG.Interfaces;
-using BFQG.Models;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace BFQG.Controllers
+namespace BFQG.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AccountController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class AccountController : Controller
+    private readonly IAccountService _accountService;
+
+    public AccountController(IAccountService accountService)
     {
-        private readonly IAccountService _accountService;
+        _accountService = accountService;
+    }
 
-        public AccountController(IAccountService accountService)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterUserModel model)
+    {
+
+        var response = await _accountService.Register(model);
+        if (response.StatusCode == Enum.StatusCode.OK)
         {
-            _accountService= accountService;
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUserModel model)
-        {
-          
-            var response = await _accountService.Register(model);
-            if (response.StatusCode == Enum.StatusCode.OK)
-            {
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(response.Data));
-                return Ok();
-            }
-            return BadRequest(response.Data);
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUserModel user)
-        {
-            var response = await _accountService.Login(user);
-
-            if (response.StatusCode == Enum.StatusCode.OK) 
-            {
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(response.Data));
-
-                return Ok();
-            }
-            return BadRequest(response.Data);
-        }
-
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(response.Data));
             return Ok();
         }
+        return BadRequest(response.Data);
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginUserModel user)
+    {
+        var response = await _accountService.Login(user);
+
+        if (response.StatusCode == Enum.StatusCode.OK)
+        {
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(response.Data));
+
+            return Ok();
+        }
+        return BadRequest(response.Data);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return Ok();
     }
 }

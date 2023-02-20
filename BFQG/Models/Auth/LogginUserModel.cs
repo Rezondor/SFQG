@@ -1,8 +1,8 @@
-﻿namespace BFQG.Models
+﻿namespace BFQG.Models.Auth
 {
     public class LoginUserModel
     {
         public string Email { get; set; }
-        public string Password { get; set; } 
+        public string Password { get; set; }
     }
 }

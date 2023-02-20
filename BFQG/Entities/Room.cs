@@ -13,7 +13,7 @@ public partial class Room
 
     public DateTime CreateDate { get; set; }
 
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
     public bool? IsClose { get; set; }
 

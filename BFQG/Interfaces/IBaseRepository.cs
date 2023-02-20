@@ -1,13 +1,12 @@
-﻿namespace BFQG.Interfaces
+﻿namespace BFQG.Interfaces;
+
+public interface IBaseRepository<T>
 {
-    public interface IBaseRepository<T>
-    {
-        Task Create(T entity);
+    Task Create(T entity);
 
-        IQueryable<T> GetAll();
+    IQueryable<T> GetAll();
 
-        Task Delete(T entity);
+    Task Delete(T entity);
 
-        Task<T> Update(T entity);
-    }
+    Task<T> Update(T entity);
 }

@@ -1,7 +1,7 @@
 using BFQG;
 using BFQG.Interfaces;
 using BFQG.Models;
-using BFQG.Repositories;
+using BFQG.Repositories.Base;
 using BFQG.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +25,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.AccessDeniedPath = new PathString("/Account/login");
 });
 
-builder.Services.AddScoped<IBaseRepository<UserModel>, UserRepository>();
-builder.Services.AddScoped<IAccountService, AccountService>();
+
+Scopeds.Add(builder.Services);
+
+builder.Services.AddSingleton<RoomSingleton>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

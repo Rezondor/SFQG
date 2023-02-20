@@ -3,7 +3,7 @@ using BFQG.Enum;
 using BFQG.Interfaces;
 using BFQG.Models;
 
-namespace BFQG.Repositories;
+namespace BFQG.Repositories.Base;
 
 public class UserRepository : IBaseRepository<UserModel>
 {
@@ -17,7 +17,7 @@ public class UserRepository : IBaseRepository<UserModel>
     public IQueryable<UserModel> GetAll()
     {
         IQueryable<UserModel> users = _db.UsersInfos
-            .Join(_db.UsersAuthenticationInfo,
+            .Join(_db.UsersAuthenticationInfos,
             u => u.Id, u => u.Id,
             (ui, ua) => new UserModel
             {
@@ -55,13 +55,13 @@ public class UserRepository : IBaseRepository<UserModel>
             GroupId = entity.GroupId,
         });
         await _db.SaveChangesAsync();
-        await _db.UsersAuthenticationInfo.AddAsync(new UsersAuthenticationInfo
+        await _db.UsersAuthenticationInfos.AddAsync(new UsersAuthenticationInfo
         {
             Id = _db.UsersInfos.
-            Where(u => 
-            u.Firstname == entity.FirstName && 
-            u.Lastname == entity.LastName && 
-            u.Course == entity.Course && 
+            Where(u =>
+            u.Firstname == entity.FirstName &&
+            u.Lastname == entity.LastName &&
+            u.Course == entity.Course &&
             u.Patronomic == entity.Patronomic).First().Id,
             Email = entity.Email,
             Password = entity.Password
@@ -84,7 +84,7 @@ public class UserRepository : IBaseRepository<UserModel>
         });
         await _db.SaveChangesAsync();
         int id = _db.UsersInfos.Last().Id;
-        _db.UsersAuthenticationInfo.Update(new UsersAuthenticationInfo
+        _db.UsersAuthenticationInfos.Update(new UsersAuthenticationInfo
         {
             Id = id,
             Email = entity.Email,

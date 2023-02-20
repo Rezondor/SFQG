@@ -1,9 +1,8 @@
-﻿using BFQG.Entities;
-using BFQG.Enum;
+﻿using BFQG.Enum;
 using BFQG.Interfaces;
 using BFQG.Models;
 
-namespace BFQG.Repositories;
+namespace BFQG.Repositories.Base;
 
 public class SubjectRepository : IBaseRepository<Subject>
 {

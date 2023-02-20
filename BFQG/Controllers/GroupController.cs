@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace BFQG.Controllers
+namespace BFQG.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class GroupController : Controller
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class GroupController : Controller
+    [NonAction]
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

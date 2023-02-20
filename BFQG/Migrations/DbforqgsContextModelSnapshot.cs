@@ -131,9 +131,13 @@ namespace BFQG.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("AvgProvenTime")
-                        .HasColumnType("real")
+                    b.Property<TimeOnly>("AvgProvenTime")
+                        .HasColumnType("time without time zone")
                         .HasColumnName("avg_proven_time");
+
+                    b.Property<string>("LabsJson")
+                        .HasColumnType("text")
+                        .HasColumnName("labs_json");
 
                     b.Property<int>("ProvenLabCount")
                         .HasColumnType("integer")
@@ -183,6 +187,10 @@ namespace BFQG.Migrations
                     b.Property<int?>("MaxScore")
                         .HasColumnType("integer")
                         .HasColumnName("max_score");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer")
+                        .HasColumnName("number");
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer")
@@ -289,7 +297,7 @@ namespace BFQG.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("create_date");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_date");
 
@@ -373,6 +381,10 @@ namespace BFQG.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("group_id");
 
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("integer")
+                        .HasColumnName("subject_id");
+
                     b.Property<int>("TeacherId")
                         .HasColumnType("integer")
                         .HasColumnName("teacher_id");
@@ -381,6 +393,8 @@ namespace BFQG.Migrations
                         .HasName("pk_teacher_groups");
 
                     b.HasIndex("GroupId");
+
+                    b.HasIndex("SubjectId");
 
                     b.HasIndex("TeacherId");
 
@@ -415,8 +429,9 @@ namespace BFQG.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("nextval('users_id_seq'::regclass)");
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountTypeId")
                         .HasColumnType("integer")
@@ -590,6 +605,13 @@ namespace BFQG.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_teacher_groups_groups");
 
+                    b.HasOne("BFQG.Entities.Subject", "Subject")
+                        .WithMany("TeacherGroups")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_teacher_groups_subject");
+
                     b.HasOne("BFQG.Entities.UsersInfo", "Teacher")
                         .WithMany("TeacherGroups")
                         .HasForeignKey("TeacherId")
@@ -597,6 +619,8 @@ namespace BFQG.Migrations
                         .HasConstraintName("fk_teacher_groups_users_info");
 
                     b.Navigation("Group");
+
+                    b.Navigation("Subject");
 
                     b.Navigation("Teacher");
                 });
@@ -672,6 +696,8 @@ namespace BFQG.Migrations
                     b.Navigation("Labs");
 
                     b.Navigation("Lessons");
+
+                    b.Navigation("TeacherGroups");
                 });
 
             modelBuilder.Entity("BFQG.Entities.UsersInfo", b =>

@@ -68,7 +68,8 @@ namespace BFQG.Migrations
                 name: "users_info",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false, defaultValueSql: "nextval('users_id_seq'::regclass)"),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     lastname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     firstname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     patronomic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
@@ -104,7 +105,8 @@ namespace BFQG.Migrations
                     deadline = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     maxscore = table.Column<int>(name: "max_score", type: "integer", nullable: true),
                     isvisible = table.Column<bool>(name: "is_visible", type: "boolean", nullable: false),
-                    testlink = table.Column<string>(name: "test_link", type: "character varying", nullable: true)
+                    testlink = table.Column<string>(name: "test_link", type: "character varying", nullable: true),
+                    number = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -184,7 +186,8 @@ namespace BFQG.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     teacherid = table.Column<int>(name: "teacher_id", type: "integer", nullable: false),
-                    groupid = table.Column<int>(name: "group_id", type: "integer", nullable: false)
+                    groupid = table.Column<int>(name: "group_id", type: "integer", nullable: false),
+                    subjectid = table.Column<int>(name: "subject_id", type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,6 +197,12 @@ namespace BFQG.Migrations
                         column: x => x.groupid,
                         principalTable: "groups",
                         principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_teacher_groups_subject",
+                        column: x => x.subjectid,
+                        principalTable: "subject",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_teacher_groups_users_info",
                         column: x => x.teacherid,
@@ -256,7 +265,7 @@ namespace BFQG.Migrations
                     lessonid = table.Column<int>(name: "lesson_id", type: "integer", nullable: false),
                     usercount = table.Column<int>(name: "user_count", type: "integer", nullable: true),
                     createdate = table.Column<DateTime>(name: "create_date", type: "timestamp with time zone", nullable: false),
-                    enddate = table.Column<DateTime>(name: "end_date", type: "timestamp with time zone", nullable: false),
+                    enddate = table.Column<DateTime>(name: "end_date", type: "timestamp with time zone", nullable: true),
                     isclose = table.Column<bool>(name: "is_close", type: "boolean", nullable: true)
                 },
                 constraints: table =>
@@ -301,8 +310,9 @@ namespace BFQG.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     roomid = table.Column<int>(name: "room_id", type: "integer", nullable: false),
                     provenlabcount = table.Column<int>(name: "proven_lab_count", type: "integer", nullable: false),
-                    avgproventime = table.Column<float>(name: "avg_proven_time", type: "real", nullable: false),
-                    studentscount = table.Column<int>(name: "students_count", type: "integer", nullable: false)
+                    avgproventime = table.Column<TimeOnly>(name: "avg_proven_time", type: "time without time zone", nullable: false),
+                    studentscount = table.Column<int>(name: "students_count", type: "integer", nullable: false),
+                    labsjson = table.Column<string>(name: "labs_json", type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -383,6 +393,11 @@ namespace BFQG.Migrations
                 name: "IX_teacher_groups_group_id",
                 table: "teacher_groups",
                 column: "group_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_teacher_groups_subject_id",
+                table: "teacher_groups",
+                column: "subject_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_teacher_groups_teacher_id",

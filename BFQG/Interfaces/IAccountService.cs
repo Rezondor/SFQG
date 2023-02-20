@@ -1,12 +1,9 @@
-﻿using BFQG.Models;
-using BFQG.Response;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
-namespace BFQG.Interfaces
+namespace BFQG.Interfaces;
+
+public interface IAccountService
 {
-    public interface IAccountService
-    {
-        Task<BaseResponse<ClaimsIdentity>> Login(LoginUserModel model);
-        Task<BaseResponse<ClaimsIdentity>> Register(RegisterUserModel model);
-    }
+    Task<BaseResponse<ClaimsIdentity>> Login(LoginUserModel model);
+    Task<BaseResponse<ClaimsIdentity>> Register(RegisterUserModel model);
 }
